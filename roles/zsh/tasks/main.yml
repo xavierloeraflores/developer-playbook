@@ -1,0 +1,44 @@
+---
+# tasks file for zsh
+- name: change user shell to zsh
+  become: yes
+  user:
+    name: "{{ ansible_user_id }}"
+    shell: /bin/zsh
+- name: create .zshrc
+  file:
+    path: ~/.zshrc
+    state: touch
+- name: Set zsh prompt
+  blockinfile:
+    marker: "### {mark} Set zsh prompt to username@hostname ~ %"
+    dest: ~/.zshrc
+    block: |
+      PROMPT="%n@%m %1~ %# "
+- name: Make sure /usr/local/bin exists and is writeable on macOS by admin users
+  become: yes
+  file:
+    path: /usr/local/bin
+    state: directory
+    mode: 0775
+    owner: root
+    group: admin
+  when: ansible_distribution|lower == 'macosx'
+
+- name: Set EDITOR Environment variable
+  blockinfile:
+    marker: "### {mark} SET VSCODE TO BE THE DEFAULT EDITOR"
+    dest: ~/.zshrc
+    block: |
+      export EDITOR="code -w"
+
+- name: Create ~/.local/bin
+  file:
+    path: ~/.local/bin
+    state: directory
+- name: Add common directories to the PATH
+  blockinfile:
+    marker: "### {mark} Add common directories to the PATH"
+    path: ~/.zshrc
+    block: |
+      export PATH=$HOME/.local/bin:$PATH

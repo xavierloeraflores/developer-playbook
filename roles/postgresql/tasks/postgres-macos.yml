@@ -1,0 +1,22 @@
+- name: Install postgresql@4 using homebrew
+  community.general.homebrew:
+    update_homebrew: yes
+    name: postgresql@14
+    state: present
+# - name: Add PATH for postgresql@14
+#   command: echo 'export PATH="/opt/homebrew/opt/postgresql@14/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
+- name: Add postgres directory to the PATH
+  blockinfile:
+    marker: "### {mark} Add postgresql@14 directory to the PATH"
+    path: ~/.zshrc
+    block: |
+      export PATH="/opt/homebrew/opt/postgresql@14/bin:$PATH"
+- name: Start postgresl
+  command: brew services start postgresql@14
+- name: Check for default database
+  command: "psql {{ ansible_user_id }} -c '\\q'"
+  register: default_database
+  ignore_errors: yes
+- name: Create user's default database
+  command: "createdb {{ ansible_user_id }}"
+  when: default_database.failed == True

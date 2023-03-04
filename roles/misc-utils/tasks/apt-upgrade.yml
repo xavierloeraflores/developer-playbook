@@ -1,0 +1,21 @@
+- name: apt upgrade
+  become: yes
+  apt:
+    update_cache: yes
+    upgrade: full
+- name: apt install dependencies
+  become: yes
+  apt:
+    update_cache: yes
+    state: present
+    name: 
+      - zsh
+      - acl
+      - git
+      - python3-pip
+      - zip
+      - unzip
+      - grc
+      - pgcli
+      - htop
+      - curl
