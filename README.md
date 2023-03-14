@@ -1,4 +1,4 @@
-# Custom Ansible Playbook for Ubuntu on WSL2 and macOS
+# Custom Ansible Playbook for Ubuntu on WSL2 and macOS intended as an alteranative fix for Fullstack Academy Students
 
 This is a custom ansible playbook. It sets up all the tools for local web
 development using Node.JS
